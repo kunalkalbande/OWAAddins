@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides"
+  xsi:type="MailApp">
+
+  <Id>cf73508c-fb4a-424d-ae63-87712cf0f9c7</Id>
+  <Version>1.0</Version>
+   <ProviderName>Synerzip SoftTech</ProviderName>
+  <DefaultLocale>en-us</DefaultLocale>
+  <DisplayName DefaultValue="EncryptionWithSetting" />
+  <Description DefaultValue="On send with setting" />
+
+ <!-- Icon for your add-in. Used on installation screens and the add-ins dialog. -->
+  <IconUrl DefaultValue="https://onsendaddinws.azurewebsites.net/assets/icon-32.png" />
+  <HighResolutionIconUrl DefaultValue="https://onsendaddinws.azurewebsites.net/assets/icon-80.png"/>
+
+<!-- Domains that will be allowed when navigating. For example, if you use ShowTaskpane and then have an href link, navigation will only be allowed if the domain is on this list. -->
+  <AppDomains>
+    <AppDomain>https://onsendaddinws.azurewebsites.net</AppDomain>
+    <AppDomain>AppDomain2</AppDomain>
+    <AppDomain>AppDomain3</AppDomain>
+  </AppDomains>
+  <!--End Basic Settings. -->
+
+
+
+  <Requirements>
+    <Sets DefaultMinVersion="1.1">
+      <Set Name="Mailbox" />
+    </Sets>
+  </Requirements>
+
+  <FormSettings>
+    <Form xsi:type="ItemEdit">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://onsendaddinws.azurewebsites.net/index.html" />
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+
+  <Permissions>ReadWriteMailbox</Permissions>
+
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Edit" />
+    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit" />
+  </Rule>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <!-- On Send requires VersionOverridesV1_1 -->
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Description resid="residAppDescription" />
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.3">
+          <bt:Set Name="Mailbox" />
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <DesktopFormFactor>
+            <!-- The functionfile and function name to call on message send.  -->
+            <!-- In this particular case the function validateSubjectAndCC will be called within the JavaScript code referenced in residUILessFunctionFileUrl. -->
+            <FunctionFile resid="residUILessFunctionFileUrl" />
+            <ExtensionPoint xsi:type="Events">
+              <Event Type="ItemSend" FunctionExecution="synchronous" FunctionName="validateSubjectAndCC" />
+              </ExtensionPoint>
+
+               <!-- Message Read -->
+          <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+            <!-- Use the default tab of the ExtensionPoint or create your own with <CustomTab id="myTab"> -->
+            <OfficeTab id="TabDefault">
+              <!-- Up to 6 Groups added per Tab -->
+              <Group id="msgReadGroup">
+                <Label resid="groupLabel" />
+                <!-- Launch the add-in : task pane button -->
+                <Control xsi:type="Button" id="msgReadOpenPaneButton">
+                  <Label resid="paneReadButtonLabel" />
+                  <Supertip>
+                    <Title resid="paneReadSuperTipTitle" />
+                    <Description resid="paneReadSuperTipDescription" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="icon16" />
+                    <bt:Image size="32" resid="icon32" />
+                    <bt:Image size="80" resid="icon80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <SourceLocation resid="messageReadTaskPaneUrl" />
+                  </Action>
+                </Control>
+                <!-- Go to http://aka.ms/ButtonCommands to learn how to add more Controls: ExecuteFunction and Menu -->
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+          <!-- Go to http://aka.ms/ExtensionPointsCommands to learn how to add more Extension Points: MessageRead, AppointmentOrganizer, AppointmentAttendee -->
+
+          </DesktopFormFactor>
+          
+        </Host>
+      </Hosts>
+      <Resources>
+      <bt:Images>
+        <bt:Image id="icon16" DefaultValue="https://onsendaddinws.azurewebsites.net/assets/icon-16.png"/>
+        <bt:Image id="icon32" DefaultValue="https://onsendaddinws.azurewebsites.net/assets/icon-32.png"/>
+        <bt:Image id="icon80" DefaultValue="https://onsendaddinws.azurewebsites.net/assets/icon-80.png"/>
+      </bt:Images>
+        <bt:Urls>
+          <!-- The JavaScript code is hosted on a secure and trusted web server. -->
+          <bt:Url id="residUILessFunctionFileUrl" DefaultValue="https://onsendaddinws.azurewebsites.net/index.html" ></bt:Url>
+          <bt:Url id="messageReadTaskPaneUrl" DefaultValue="https://onsendaddinws.azurewebsites.net/settings/userSetting.html"></bt:Url>
+        </bt:Urls>
+         <bt:ShortStrings>
+        <bt:String id="groupLabel" DefaultValue="EncryptionWithSettings"/>
+        <bt:String id="customTabLabel"  DefaultValue="My Add-in Tab"/>
+        <bt:String id="paneReadButtonLabel" DefaultValue="Display all properties"/>
+        <bt:String id="paneReadSuperTipTitle" DefaultValue="Get all properties"/>
+        <bt:String id="insertGistLabel" DefaultValue="Insert Gist">
+          <bt:Override Locale="es-ES" Value="Inserte el Gist"/>
+        </bt:String>
+        <bt:String id="insertGistTitle" DefaultValue="Insert Gist">
+          <bt:Override Locale="es-ES" Value="Inserte el Gist"/>
+        </bt:String>
+        <bt:String id="insertDefaultGistLabel" DefaultValue="Insert Default Gist">
+          <bt:Override Locale="es-ES" Value="Inserte el Gist predeterminado"/>
+        </bt:String>
+        <bt:String id="insertDefaultGistTitle" DefaultValue="Insert Default Gist">
+          <bt:Override Locale="es-ES" Value="Inserte el Gist predeterminado"/>
+        </bt:String>
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="paneReadSuperTipDescription" DefaultValue="Opens a pane displaying all available properties. This is an example of a button that opens a task pane."/>
+        <bt:String id="insertGistDesc" DefaultValue="Displays a list of your Gists and allows you to insert their contents into the current message">
+          <bt:Override Locale="es-ES" Value="Muestra una lista de sus Gists y permite insertar su contenido en el mensaje actual"/>
+        </bt:String>
+        <bt:String id="insertDefaultGistDesc" DefaultValue="Inserts the contents of the Gist you mark as default into the current message">
+          <bt:Override Locale="es-ES" Value="Inserta el contenido de lo Gist que marca como predeterminado en el mensaje actual"/>
+        </bt:String>
+      </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
+</OfficeApp>
